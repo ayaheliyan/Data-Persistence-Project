@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.IO;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
-    public Text ScoreText;
+    public GameObject ScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -18,7 +20,27 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
-    
+    private MainUI takename;
+    public static MainManager Instance;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        // end of new code
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void NewName(GameObject name)
+    {
+        MainManager.Instance.ScoreText = name;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +58,10 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
     }
+
+
 
     private void Update()
     {
@@ -57,7 +82,8 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                 SceneManager.LoadScene(1);
+              //  SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
     }
@@ -65,7 +91,7 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        //ScoreText = $"Score : {m_Points}";
     }
 
     public void GameOver()
@@ -73,4 +99,7 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
+
+
+
 }
